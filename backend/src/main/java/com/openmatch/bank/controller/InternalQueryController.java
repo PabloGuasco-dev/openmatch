@@ -1,6 +1,6 @@
-package com.openmatch.banco.controller;
+package com.openmatch.bank.controller;
 
-import com.openmatch.banco.dto.BancoResponse;
+import com.openmatch.bank.dto.BankResponse;
 import org.springframework.core.env.Environment;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -13,34 +13,34 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 /**
- * Endpoint que consume el endpoint de consulta mediante una llamada HTTP a sí mismo.
- * Realiza GET al mismo microservicio (endpoint de listado de bancos).
+ * Endpoint that consumes the query endpoint through an HTTP call to itself.
+ * Performs GET to the same microservice (bank listing endpoint).
  */
 @RestController
-@RequestMapping("/api/bancos")
-public class ConsultaInternaController {
+@RequestMapping("/api/banks")
+public class InternalQueryController {
 
     private final RestTemplate restTemplate;
     private final Environment environment;
 
-    public ConsultaInternaController(RestTemplate restTemplate, Environment environment) {
+    public InternalQueryController(RestTemplate restTemplate, Environment environment) {
         this.restTemplate = restTemplate;
         this.environment = environment;
     }
 
     /**
-     * Consulta interna: llama por HTTP al endpoint GET /api/bancos del mismo microservicio
-     * y devuelve el resultado (listado de bancos).
+     * Internal query: calls via HTTP the GET /api/banks endpoint of the same microservice
+     * and returns the result (bank list).
      */
-    @GetMapping("/consulta-interna")
-    public ResponseEntity<List<BancoResponse>> consultaInterna() {
+    @GetMapping("/internal-query")
+    public ResponseEntity<List<BankResponse>> internalQuery() {
         String port = environment.getProperty("local.server.port", environment.getProperty("server.port", "8080"));
-        String url = "http://localhost:" + port + "/api/bancos";
-        ResponseEntity<List<BancoResponse>> response = restTemplate.exchange(
+        String url = "http://localhost:" + port + "/api/banks";
+        ResponseEntity<List<BankResponse>> response = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<List<BancoResponse>>() {}
+                new ParameterizedTypeReference<List<BankResponse>>() {}
         );
         return ResponseEntity.ok(response.getBody());
     }

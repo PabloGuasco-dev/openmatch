@@ -1,4 +1,4 @@
-package com.openmatch.banco.exception;
+package com.openmatch.bank.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,21 +12,21 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Manejo global de excepciones. Patrón Controller Advice.
- * Devuelve respuestas HTTP coherentes para errores de negocio y validación.
+ * Global exception handling. Controller Advice pattern.
+ * Returns consistent HTTP responses for business and validation errors.
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(BancoNotFoundException.class)
-    public ResponseEntity<ErrorBody> handleBancoNotFound(BancoNotFoundException ex) {
+    @ExceptionHandler(BankNotFoundException.class)
+    public ResponseEntity<ErrorBody> handleBankNotFound(BankNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ErrorBody(HttpStatus.NOT_FOUND.value(), ex.getMessage(), Instant.now())
         );
     }
 
-    @ExceptionHandler(DuplicateBancoException.class)
-    public ResponseEntity<ErrorBody> handleDuplicateBanco(DuplicateBancoException ex) {
+    @ExceptionHandler(DuplicateBankException.class)
+    public ResponseEntity<ErrorBody> handleDuplicateBank(DuplicateBankException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 new ErrorBody(HttpStatus.CONFLICT.value(), ex.getMessage(), Instant.now())
         );
@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.joining("; "));
         Map<String, Object> body = new HashMap<>();
         body.put("status", HttpStatus.BAD_REQUEST.value());
-        body.put("message", "Error de validación: " + errors);
+        body.put("message", "Validation error: " + errors);
         body.put("timestamp", Instant.now());
         return ResponseEntity.badRequest().body(body);
     }
@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorBody> handleGeneric(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                new ErrorBody(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Error interno del servidor", Instant.now())
+                new ErrorBody(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error", Instant.now())
         );
     }
 

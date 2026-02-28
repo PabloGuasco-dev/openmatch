@@ -1,59 +1,59 @@
-# Microservicio CRUD Entidades Bancarias
+# Banking Entities CRUD Microservice
 
-Microservicio REST que expone un CRUD completo sobre entidades bancarias (Banco), con base de datos H2 en memoria.
+REST microservice that exposes a complete CRUD on banking entities (Bank), with in-memory H2 database.
 
-## Requisitos
+## Requirements
 
 - Java 17+
-- Maven (o usar `./mvnw`)
+- Maven (or use `./mvnw`)
 
-## Ejecución
+## Execution
 
 ```bash
 ./mvnw spring-boot:run
 ```
 
-La API queda disponible en `http://localhost:8080` (puerto por defecto).
+The API is available at `http://localhost:8080` (default port).
 
-## API REST
+## REST API
 
-Base path: **`/api/bancos`**
+Base path: **`/api/banks`**
 
-| Método | Ruta | Descripción |
+| Method | Path | Description |
 |--------|------|-------------|
-| GET | `/api/bancos` | Listar todos los bancos |
-| GET | `/api/bancos/{id}` | Obtener banco por id |
-| POST | `/api/bancos` | Crear banco (alta) |
-| PUT | `/api/bancos/{id}` | Actualizar banco (modificación) |
-| DELETE | `/api/bancos/{id}` | Eliminar banco (baja) |
-| GET | `/api/bancos/consulta-interna` | **Consulta interna**: llama por HTTP al endpoint GET `/api/bancos` del mismo microservicio y devuelve el listado |
+| GET | `/api/banks` | List all banks |
+| GET | `/api/banks/{id}` | Get bank by id |
+| POST | `/api/banks` | Create bank |
+| PUT | `/api/banks/{id}` | Update bank |
+| DELETE | `/api/banks/{id}` | Delete bank |
+| GET | `/api/banks/internal-query` | **Internal query**: makes HTTP call to GET `/api/banks` endpoint of the same microservice and returns the list |
 
-### Ejemplo de cuerpo para POST/PUT
+### POST/PUT Body Example
 
 ```json
 {
-  "codigo": "B001",
-  "nombre": "Banco Ejemplo",
-  "pais": "España",
-  "activo": true
+  "code": "B001",
+  "name": "Example Bank",
+  "country": "Spain",
+  "active": true
 }
 ```
 
-- **codigo**: obligatorio, único (evita duplicados).
-- **nombre**: obligatorio.
-- **pais**: opcional.
-- **activo**: opcional, por defecto `true`.
+- **code**: required, unique (prevents duplicates).
+- **name**: required.
+- **country**: optional.
+- **active**: optional, defaults to `true`.
 
-## Diseño y patrones
+## Design and Patterns
 
-- **Arquitectura en capas**: Controller → Service → Repository (JPA).
-- **Patrones**: Repository (Spring Data JPA), Service (lógica de negocio), DTOs para entrada/salida, excepciones de dominio (`BancoNotFoundException`, `DuplicateBancoException`).
-- **Manejo de duplicados**: en POST y PUT se valida que no exista otro banco con el mismo `codigo`; si existe, se responde **409 Conflict**.
-- **Manejo de excepciones**: `@RestControllerAdvice` (`GlobalExceptionHandler`) centraliza respuestas para:
-  - 404 si el banco no existe.
-  - 409 si el código está duplicado.
-  - 400 si falla la validación (Bean Validation).
-  - 500 para errores no controlados.
+- **Layered architecture**: Controller → Service → Repository (JPA).
+- **Patterns**: Repository (Spring Data JPA), Service (business logic), DTOs for input/output, domain exceptions (`BancoNotFoundException`, `DuplicateBancoException`).
+- **Duplicate handling**: in POST and PUT validates that no other bank exists with the same `code`; if it exists, responds **409 Conflict**.
+- **Exception handling**: `@RestControllerAdvice` (`GlobalExceptionHandler`) centralizes responses for:
+  - 404 if bank doesn't exist.
+  - 409 if code is duplicated.
+  - 400 if validation fails (Bean Validation).
+  - 500 for uncontrolled errors.
 
 ## Tests
 
@@ -61,11 +61,11 @@ Base path: **`/api/bancos`**
 ./mvnw test
 ```
 
-- **BancoServiceTest**: tests unitarios del servicio (crear, duplicado, findById, update, delete).
-- **BancoControllerIntegrationTest**: tests de integración del CRUD (crear, listar, obtener, eliminar, validación, duplicado 409).
-- **ConsultaInternaIntegrationTest**: comprueba que `/api/bancos/consulta-interna` realiza la llamada HTTP al propio microservicio y devuelve el listado.
+- **BancoServiceTest**: unit tests of the service (create, duplicate, findById, update, delete).
+- **BancoControllerIntegrationTest**: CRUD integration tests (create, list, get, delete, validation, duplicate 409).
+- **ConsultaInternaIntegrationTest**: verifies that `/api/banks/internal-query` makes the HTTP call to the same microservice and returns the list.
 
 ## H2 Console
 
-En desarrollo, la consola H2 está en: `http://localhost:8080/h2-console`  
-JDBC URL: `jdbc:h2:mem:bancosdb`, usuario: `sa`, contraseña vacía.
+In development, the H2 console is at: `http://localhost:8080/h2-console`  
+JDBC URL: `jdbc:h2:mem:bancosdb`, user: `sa`, password empty.

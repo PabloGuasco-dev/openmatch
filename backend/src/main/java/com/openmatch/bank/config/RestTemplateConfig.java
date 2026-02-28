@@ -1,9 +1,12 @@
-package com.openmatch.banco.config;
+package com.openmatch.bank.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * Configuration for RestTemplate bean.
+ */
 @Configuration
 public class RestTemplateConfig {
 
