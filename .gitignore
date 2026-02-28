@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+
+# Build / dist
+dist/
+target/
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+
+# Logs y temporales
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.settings/
+.springBeans
+.sts4-cache
+
+# Backend (Maven/Spring)
+backend/target/
+backend/.apt_generated
+backend/.classpath
+backend/.factorypath
+backend/.project
+
+# Frontend
+frontend/dist/
+frontend/dist-ssr/
+*.local
