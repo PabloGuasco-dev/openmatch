@@ -180,7 +180,7 @@ function App() {
                     value={formData.code}
                     onChange={handleInputChange}
                     required
-                    disabled={editingBank}
+                    disabled={editingBank} // Code cannot be changed when editing
                   />
                 </div>
                 
